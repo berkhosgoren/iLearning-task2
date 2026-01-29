@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Org.BouncyCastle.Crypto.Digests;
 
 var folder = @"C:\Users\Berk\Desktop\task2";
@@ -14,7 +15,7 @@ if (!Directory.Exists(folder))
 
 var files = Directory.GetFiles(folder).OrderBy(f => f, StringComparer.OrdinalIgnoreCase).ToArray();
 
-Console.WriteLine($"Files found: {files.Length}");
+//Console.WriteLine($"Files found: {files.Length}");
 if(files.Length != 256)
 {
     Console.WriteLine("Unexpected file count. Expected is 256.");
@@ -56,12 +57,14 @@ foreach (var path in files)
     items.Add((h, k));
 }
 
-Console.WriteLine($"Hashes computed: {items.Count}");
-
 var sorted = items.OrderBy(x => x.Key).Select(x => x.Hash).ToList();
 
-Console.WriteLine("First 3 hashes after sort:");
-foreach (var h in sorted.Take(3))
-    Console.WriteLine(h);
+var joined = string.Concat(sorted);
 
-Console.WriteLine("Ready for the final concatenation step.");
+var email = "berkhosgoren1@gmail.com";
+
+var finalInput = joined + email;
+
+var finalHash = Sha3_256Hex(Encoding.UTF8.GetBytes(finalInput));
+
+Console.WriteLine(finalHash);
