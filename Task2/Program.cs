@@ -1,22 +1,15 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
+using System.Text;
+using Org.BouncyCastle.Crypto.Digests;
 
-var folder = @"C:\Users\Berk\Desktop\task2";
-
-if (!Directory.Exists(folder))
+static string Sha3_256Hex(byte[] data)
 {
-    Console.WriteLine("Folder not found: " + folder);
-    return;
+    var d = new Sha3Digest(256);
+    d.BlockUpdate(data, 0, data.Length);
+    var hash = new byte[32];
+    d.DoFinal(hash, 0);
+    return Convert.ToHexString(hash).ToLowerInvariant();
 }
 
-var files = Directory.GetFiles(folder).OrderBy(f => f, StringComparer.OrdinalIgnoreCase).ToArray();
-
-Console.WriteLine($"Files found: {files.Length}");
-
-if (files.Length > 0)
-{
-    Console.WriteLine("First few files:");
-    foreach (var f in files.Take(5)) Console.WriteLine(" - " + Path.GetFileName(f));  
-}
-
+var empty = Array.Empty<byte>();
+Console.WriteLine(Sha3_256Hex(empty)); 
